@@ -19,14 +19,14 @@ def frequent_words(genome, k):
 
 def reverse_complement(genome):
     res = ''
-    for i in range(len(genome)-1, -1, -1):
-        if genome[i] == 'A':
+    for i in genome[::-1]:
+        if i == 'A':
             res += 'T'
-        elif genome[i] == 'T':
+        elif i == 'T':
             res += 'A'
-        elif genome[i] == 'G':
+        elif i == 'G':
             res += 'C'
-        elif genome[i] == 'C':
+        elif i == 'C':
             res += 'G'
     return res
 
