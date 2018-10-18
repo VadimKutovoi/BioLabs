@@ -17,7 +17,20 @@ def frequent_words(genome, k):
             frequent_patterns.append(key)
     return frequent_patterns
 
+def reverse_complement(genome):
+    res = ''
+    for i in range(len(genome)-1, -1, -1):
+        if genome[i] == 'A':
+            res += 'T'
+        elif genome[i] == 'T':
+            res += 'A'
+        elif genome[i] == 'G':
+            res += 'C'
+        elif genome[i] == 'C':
+            res += 'G'
+    return res
 
 
 print(count_of_patterns('ATAT','GATATATGCATATACTT'))
 print(frequent_words('ACGTTGCATGTCGCATGATGCATGAGAGCT', 4))
+print(reverse_complement('AAAACCCGGT'))
