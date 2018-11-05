@@ -29,7 +29,7 @@ def reverse_complement(genome):
     return res
 
 
-def peptide_endcoding(dna, peptide):
+def peptide_encoding(dna, peptide):
     rna = dna.replace("T", "U")
 
     for i in range(0, len(dna) - len(peptide)*3, 1):
