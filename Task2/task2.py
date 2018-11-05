@@ -72,4 +72,16 @@ def spectrum(peptide):
     result.sort()
     return result
 
+def peptide_count(mass):
+    mass = int(mass)
+    acid_mass = [57, 71, 87, 97, 99, 101, 103, 113,
+                 114, 115, 128, 129, 131, 137, 147, 156, 163, 186]
+    res = {}
+    res[0] = 1
+    for i in range(57, mass + 1):
+        res[i] = 0
+        for j in acid_mass:
+            if(i - j) in res:
+                res[i] = res[i - j] + res[i]
+    return res[mass]
 
