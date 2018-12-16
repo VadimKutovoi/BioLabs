@@ -1,4 +1,5 @@
 # Task 1
+import itertools as itr
 
 def CountOfPatterns(pattern, genome):
     res = int()
@@ -240,27 +241,53 @@ def LeaderboardSequencing(spectrum, n):
 
 #Task 4
 
-def MotifEnumeration(Dna, k, d):
-	patterns = []
+def Diff(p1, p2):
+    if(len(p1) == len(p2)):
+        err = 0
+        for i, val in enumerate(p1):
+            if val != p2[i]:
+                err+=1
+        return err
+    else:
+        return -1
+    
+def GeneratePattern(pattern, d):
+    patterns = list() 
+    base = ['A', 'T', 'G', 'C']
+    for gen_pattern in itr.product(base, repeat=len(pattern)):
+            patterns.append(''.join(gen_pattern))
+    return patterns
 
-	for i in range(len(dna)-k+1):
-		pattern = dna[i: i+k]
-		
+def MotifEnumeration(dna, k, d):
+    patterns = list()
+    for row in dna:
+        for i in range(0, len(row) - k + 1):
+            pattern = row[i:i+k]
+            for pattern_ in GeneratePattern(pattern, d):
+                if Diff(pattern, pattern_) <= d:
+                    appear = 0
+                    for row_ in dna:
+                        for j in range(0, len(row_) - k + 1):
+                            if Diff(pattern_, row_[j:j+k]) <= d:
+                                appear += 1
+                                break
+                    if appear == len(dna):
+                        patterns.append(pattern_)
+    tmp = list(set(patterns))
+    return ' '.join(tmp)
+    
 kd = input().split(" ")
-k = int(kd[0])
-d = int(kd[1])
-
-dna_raw = []
+dna = []
 while True:
     try:
         line = input()
     except EOFError:
         break
-    dna_raw.append(line)
-dna = ''
-for row in dna_raw:
-    dna += str(row)
-print(k, d, dna)
+    dna.append(line)
+k = int(kd[0])
+d = int(kd[1])
+
+print(MotifEnumeration(dna, k, d))
 
 def main():
     in_pept = 'NQEL'
