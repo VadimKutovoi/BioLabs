@@ -183,7 +183,7 @@ def Trim(leaderBoard, spectrum, n):
 		scoreBoard[index] = LinearScore(peptide, spectrum)
 	scoreBoard, leaderBoard = (list(t) for t in zip(*sorted(zip(scoreBoard, leaderBoard), reverse = True)))
 	retBoard = leaderBoard[:n]; i = n
-	while i < len(leaderBoard) and scoreBoard[i] == scoreBoard[n-1]:
+	while i < boardLen and scoreBoard[i] == scoreBoard[n-1]:
 		retBoard.append(leaderBoard[i])
 		i += 1
 	return retBoard 	
