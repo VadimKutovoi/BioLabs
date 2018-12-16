@@ -276,19 +276,6 @@ def MotifEnumeration(dna, k, d):
     tmp = list(set(patterns))
     return ' '.join(tmp)
     
-kd = input().split(" ")
-dna = []
-while True:
-    try:
-        line = input()
-    except EOFError:
-        break
-    dna.append(line)
-k = int(kd[0])
-d = int(kd[1])
-
-from itertools import product
-
 inf = 1000000 
 
 def HammingDistance(p1, p2, k):
@@ -329,14 +316,3 @@ def MedianString(dna, k):
 			distanse = D(dna, pattern, k)
 			res = pattern
 	return res
-
-k = int(input())
-dna = []
-while True:
-    try:
-        line = input()
-    except EOFError:
-        break
-    dna.append(line)
-
-print(MedianString(dna, k))
