@@ -183,7 +183,7 @@ def Trim(leaderBoard, spectrum, n):
 		scoreBoard[index] = LinearScore(peptide, spectrum)
 	scoreBoard, leaderBoard = (list(t) for t in zip(*sorted(zip(scoreBoard, leaderBoard), reverse = True)))
 	retBoard = leaderBoard[:n]; i = n
-	while i < boardLen and scoreBoard[i] == scoreBoard[n-1]:
+	while i < len(leaderBoard) and scoreBoard[i] == scoreBoard[n-1]:
 		retBoard.append(leaderBoard[i])
 		i += 1
 	return retBoard 	
@@ -238,6 +238,29 @@ def LeaderboardSequencing(spectrum, n):
         res += str(Mass(pept)) + '-'
     return res[:len(res) - 1]
 
+#Task 4
+
+def MotifEnumeration(Dna, k, d):
+	patterns = []
+
+	for i in range(len(dna)-k+1):
+		pattern = dna[i: i+k]
+		
+kd = input().split(" ")
+k = int(kd[0])
+d = int(kd[1])
+
+dna_raw = []
+while True:
+    try:
+        line = input()
+    except EOFError:
+        break
+    dna_raw.append(line)
+dna = ''
+for row in dna_raw:
+    dna += str(row)
+print(k, d, dna)
 
 def main():
     in_pept = 'NQEL'
@@ -250,6 +273,5 @@ def main():
         int_list[i] = int(val)
 
     print(Peptide_sequencing(inp))
-    
-    
+       
 main()
