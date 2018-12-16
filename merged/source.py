@@ -287,18 +287,56 @@ while True:
 k = int(kd[0])
 d = int(kd[1])
 
-print(MotifEnumeration(dna, k, d))
+from itertools import product
 
-def main():
-    in_pept = 'NQEL'
-    in_spec = '0 99 113 114 128 227 257 299 355 356 370 371 484'
-    inp = '0 113 128 186 241 299 314 427'.split(" ")
-    inp = list(map(int, inp))
-    list_spec = in_spec.split(" ")
-    int_list = [0]*len(list_spec)
-    for i, val in enumerate(list_spec):
-        int_list[i] = int(val)
+inf = 1000000 
 
-    print(Peptide_sequencing(inp))
-       
-main()
+def HammingDistance(p1, p2, k):
+    if len(p1) == len(p2):
+	    err = 0
+	    for i in range(k):
+		    if p1[i] != p2[i]:
+			    err += 1
+	    return err
+    else:
+        return -1
+
+def d(pattern, row, k):
+	hd = list()
+	for i in range(len(row) - k + 1):
+		hd.append(HammingDistance(pattern, row[i:i+k], k))
+	return min(hd)
+
+def D(dna, pattern, k):
+	res = 0
+	for row in dna:
+		res += d(pattern, row, k)
+	return res
+
+def GeneratePattern(k):
+    patterns = list() 
+    base = ['A', 'T', 'G', 'C']
+    for gen_pattern in product(base, repeat=k):
+            patterns.append(''.join(gen_pattern))
+    return patterns
+
+def MedianString(dna, k):
+	distanse = inf
+	patterns = GeneratePattern(k)
+	res = ''
+	for pattern in patterns:
+		if distanse >= D(dna, pattern, k):
+			distanse = D(dna, pattern, k)
+			res = pattern
+	return res
+
+k = int(input())
+dna = []
+while True:
+    try:
+        line = input()
+    except EOFError:
+        break
+    dna.append(line)
+
+print(MedianString(dna, k))
