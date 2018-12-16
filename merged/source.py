@@ -1,13 +1,13 @@
 # Task 1
 
-def count_of_patterns(pattern, genome):
+def CountOfPatterns(pattern, genome):
     res = int()
     for i in range(len(genome) - len(pattern)):
         if pattern == genome[i:i + len(pattern)]:
             res += 1
     return res
 
-def frequent_words(genome, k):
+def FrequentWords(genome, k):
     patterns = {}
     frequent_patterns = []
     for i in range(len(genome) - k):
@@ -19,7 +19,7 @@ def frequent_words(genome, k):
             frequent_patterns.append(key)
     return frequent_patterns
 
-def reverse_complement(genome):
+def ReverseComplement(genome):
     res = ''
     for i in genome[::-1]:
         if i == 'A':
@@ -34,7 +34,7 @@ def reverse_complement(genome):
 
 # Task 2
 
-def protein_translation(data):
+def ProteinTranslation(data):
     res = ""
     codons = {
         'CAU': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q', 'CCU': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
@@ -50,7 +50,7 @@ def protein_translation(data):
             res += codons[data[i:i+3]]
     return res
 
-def peptide_encoding(dna, peptide):
+def PeptideEncoding(dna, peptide):
     rna = dna.replace("T", "U")
 
     for i in range(0, len(dna) - len(peptide)*3, 1):
@@ -60,7 +60,7 @@ def peptide_encoding(dna, peptide):
             print(dna[i:i + len(peptide)*3])
 
 
-def subpepetides_count(data):
+def Subpepetides_count(data):
     _len = int(data)
     subpeptides = _len * (_len - 1)
     print(subpeptides)
@@ -110,24 +110,47 @@ def Peptide_count(mass):
 
 def Score(peptide, input_spectrum):
     score_ = 0
-    spectrum_ = spectrum(peptide)
+    spectrum_ = Spectrum(peptide)
     for i in spectrum_:
         if i in input_spectrum:
             score_ += 1
     print(score_)
 
+def LinearScore(peptide, input_spectrum):
+    score = 0
+    spectrum = LinearSpectrum(peptide)
+    for i in input_spectrum:
+        if i in spectrum:
+            score += 1
+            spectrum.remove(i)
+    return score
+
+def Consistent(peptide, spectrum):
+    masses = {
+        'A': 71, 'I': 113, 'N': 114, 'D': 115, 'C': 103, 'Q': 128, 'E': 129,
+        'G': 57, 'H': 137, 'L': 113, 'K': 128, 'M': 131, 'F': 147, 'P': 97,
+        'S': 87, 'T': 101, 'W': 186, 'Y': 163, 'V': 99, 'R': 156}
+    linear_spec = LinearSpectrum(peptide)
+    spectrum_ = list(spectrum)
+    for i in linear_spec:
+        if i in spectrum_:
+            spectrum_.remove(i)
+        else:
+            return False
+    return True
+
+
 def Mass(peptide):
-    mass_ = 0
+    mass = 0
     masses = {
         'A': 71, 'I': 113, 'N': 114, 'D': 115, 'C': 103, 'Q': 128, 'E': 129,
         'G': 57, 'H': 137, 'L': 113, 'K': 128, 'M': 131, 'F': 147, 'P': 97,
         'S': 87, 'T': 101, 'W': 186, 'Y': 163, 'V': 99, 'R': 156}
     for i in peptide:
-        if i in masses:
-            mass_ += masses[i]
-    return mass_
+        mass += masses[i]
+    return mass
 
-def Parent_mass(spectrum):
+def ParentMass(spectrum):
     return spectrum[-1]
 
 def Expand(peptides):
@@ -143,7 +166,7 @@ def Expand(peptides):
             res.append(tmp)
     return res
 
-def Spectrum_linear(peptide):
+def LinearSpectrum(peptide):
     spectrum = [0]
     for i, val in enumerate(peptide):
         for j in range(len(peptide) - i):
@@ -151,21 +174,21 @@ def Spectrum_linear(peptide):
     spectrum.sort()
     return spectrum
 
-def Consistent(peptide, spectrum):
-    masses = {
-        'A': 71, 'I': 113, 'N': 114, 'D': 115, 'C': 103, 'Q': 128, 'E': 129,
-        'G': 57, 'H': 137, 'L': 113, 'K': 128, 'M': 131, 'F': 147, 'P': 97,
-        'S': 87, 'T': 101, 'W': 186, 'Y': 163, 'V': 99, 'R': 156}
-    linear_spec = Spectrum_linear(peptide)
-    spectrum_ = list(spectrum)
-    for i in linear_spec:
-        if i in spectrum_:
-            spectrum_.remove(i)
-        else:
-            return False
-    return True
+def Trim(leaderBoard, spectrum, n):
+	boardLen = len(leaderBoard)
+	if boardLen <= n:
+		return leaderBoard
+	scoreBoard = [0] * boardLen
+	for index, peptide in enumerate(leaderBoard):
+		scoreBoard[index] = LinearScore(peptide, spectrum)
+	scoreBoard, leaderBoard = (list(t) for t in zip(*sorted(zip(scoreBoard, leaderBoard), reverse = True)))
+	retBoard = leaderBoard[:n]; i = n
+	while i < len(leaderBoard) and scoreBoard[i] == scoreBoard[n-1]:
+		retBoard.append(leaderBoard[i])
+		i += 1
+	return retBoard 	
 
-def Peptide_sequencing(spectrum):
+def PeptideSequencing(spectrum):
     masses = {
         'A': 71, 'I': 113, 'N': 114, 'D': 115, 'C': 103, 'Q': 128, 'E': 129,
         'G': 57, 'H': 137, 'L': 113, 'K': 128, 'M': 131, 'F': 147, 'P': 97,
@@ -177,7 +200,7 @@ def Peptide_sequencing(spectrum):
         tmp = 0
         for i in range(len(peptides)):
             i -= tmp
-            if Mass(peptides[i]) == Parent_mass(spectrum):
+            if Mass(peptides[i]) == ParentMass(spectrum):
                 if Spectrum(peptides[i]) == spectrum:
                     res_pept.append(peptides[i])
                     peptides.remove(peptides[i])
@@ -193,6 +216,28 @@ def Peptide_sequencing(spectrum):
         tmp = tmp[:len(tmp) - 1]
         res.append(tmp)
     return set(res)
+
+
+def LeaderboardSequencing(spectrum, n):
+    leaderboard = ['']
+    leaderpeptide = []
+    while len(leaderboard) != 0:
+        leaderboard = Expand(leaderboard)
+        tmp = 0
+        for i in range(len(leaderboard)):
+            i -= tmp
+            if Mass(leaderboard[i]) == ParentMass(spectrum):
+                if LinearScore(leaderboard[i], spectrum) > LinearScore(leaderpeptide, spectrum):
+                    leaderpeptide = list(leaderboard[i])
+            elif Mass(leaderboard[i]) > ParentMass(spectrum):
+                    leaderboard.remove(leaderboard[i]); tmp += 1
+        leaderboard = Trim(leaderboard, spectrum, n)
+    pmass = [0] * len(leaderpeptide) 
+    res = ''
+    for pept in leaderpeptide[::-1]:
+        res += str(Mass(pept)) + '-'
+    return res[:len(res) - 1]
+
 
 def main():
     in_pept = 'NQEL'
